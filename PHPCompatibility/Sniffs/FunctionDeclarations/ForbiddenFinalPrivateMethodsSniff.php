@@ -1,5 +1,9 @@
 <?php
 /**
+ * This file has been modified by Adobe.
+ * All modifications are Copyright 2023 Adobe.
+ * All Rights Reserved.
+ *
  * PHPCompatibility, an external standard for PHP_CodeSniffer.
  *
  * @package   PHPCompatibility
@@ -88,10 +92,19 @@ class ForbiddenFinalPrivateMethodsSniff extends Sniff
             return;
         }
 
-        $phpcsFile->addWarning(
+        $fix = $phpcsFile->addFixableWarning(
             'Private methods should not be declared as final since PHP 8.0',
             $stackPtr,
             'Found'
         );
+        if ($fix === true) {
+            $phpcsFile->fixer->beginChangeset();
+            $prev = $phpcsFile->findPrevious(\T_FINAL, ($stackPtr - 1));
+            $phpcsFile->fixer->replaceToken($prev, null);
+            // Remove extra space left out by previous replacement
+            $next = $phpcsFile->findNext(\T_WHITESPACE, $prev);
+            $phpcsFile->fixer->replaceToken($next, null);
+            $phpcsFile->fixer->endChangeset();
+        }
     }
 }

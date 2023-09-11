@@ -1,5 +1,9 @@
 <?php
 /**
+ * This file has been modified by Adobe.
+ * All modifications are Copyright 2023 Adobe.
+ * All Rights Reserved.
+ *
  * PHPCompatibility, an external standard for PHP_CodeSniffer.
  *
  * @package   PHPCompatibility
@@ -108,5 +112,42 @@ class ForbiddenFinalPrivateMethodsUnitTest extends BaseSniffTestCase
     {
         $file = $this->sniffFile(__FILE__, '7.4');
         $this->assertNoViolation($file);
+    }
+
+    /**
+     * Verify that the fixed version of the file is as expected.
+     *
+     * @return void
+     */
+    public function testFixableWarnings()
+    {
+        $file                  = $this->sniffFile(__FILE__, '8.0');
+        $filepath              = $file->getFilename();
+        $filename              = \basename($filepath);
+        $expectedWarningsCount = \count(static::dataForbiddenFinalPrivateMethods());
+        $actualFixableCount    = $file->getFixableCount();
+        $this->assertEquals(
+            $expectedWarningsCount,
+            $actualFixableCount,
+            'Failed asserting that the number of fixable violations'
+            . " $actualFixableCount matches expected $expectedWarningsCount"
+        );
+        $file->fixer->startFile($file);
+        $file->fixer->fixFile();
+        $actualFixableCount = $file->getFixableCount();
+        $this->assertEquals(
+            0,
+            $actualFixableCount,
+            "Failed to fix $actualFixableCount fixable violations in $filename"
+        );
+        $fixedFilepath = $filepath . '.fixed';
+        $this->assertFileExists($fixedFilepath);
+        $fixedFilename = \basename($fixedFilepath);
+        $diff          = $file->fixer->generateDiff($fixedFilepath);
+        $this->assertEquals(
+            '',
+            \trim($diff),
+            "Fixed version of $filename does not match expected version in $fixedFilename; the diff is\n$diff"
+        );
     }
 }
