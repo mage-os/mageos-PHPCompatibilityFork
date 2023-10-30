@@ -1,3 +1,10 @@
+> [!NOTE]  
+> This is a fork of [PHPCompatibility](https://github.com/PHPCompatibility/PHPCompatibility). It adds the following capabilities on top of the awesome ones already provided through **PHPCompatibility**:
+>
+> - Added sniff `PHPCompatibility.ParameterValues.RemovedMbStringEncodings` that reports usage of the QPrint, Base64, Uuencode, and HTML-ENTITIES 'text encodings' with MBString functions as deprecated. See [PHP 8.2 Deprecated Features](https://www.php.net/manual/en/migration82.deprecated.php#migration82.deprecated.mbstring).
+> - Added sniff `PHPCompatibility.Classes.RemovedDynamicProperties` that reports usage of dynamic properties in classes as deprecated. See [PHP 8.2 Deprecated Features](https://www.php.net/manual/en/migration82.deprecated.php#migration82.deprecated.core.dynamic-properties).
+> - Enhanced sniff `PHPCompatibility.FunctionDeclarations.ForbiddenFinalPrivateMethods` to be fixable.
+
 PHP Compatibility Coding Standard for PHP CodeSniffer
 =====================================================
 [![Latest Stable Version](https://poser.pugx.org/phpcompatibility/php-compatibility/v/stable.png)](https://packagist.org/packages/phpcompatibility/php-compatibility)

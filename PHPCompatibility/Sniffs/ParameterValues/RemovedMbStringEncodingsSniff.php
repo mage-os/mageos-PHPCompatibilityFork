@@ -21,6 +21,9 @@ use PHPCSUtils\Utils\PassedParameters;
 use PHPCSUtils\Utils\TextStrings;
 
 /**
+ * Reports usage of the QPrint, Base64, Uuencode, and HTML-ENTITIES 'text encodings' with certain MBString functions
+ * as deprecated.
+ *
  * As of PHP 8.2, usage of the QPrint, Base64, Uuencode, and HTML-ENTITIES 'text encodings' is deprecated
  * for all MBString functions. Unlike all the other text encodings supported by MBString,
  * these do not encode a sequence of Unicode codepoints, but rather a sequence of raw bytes.

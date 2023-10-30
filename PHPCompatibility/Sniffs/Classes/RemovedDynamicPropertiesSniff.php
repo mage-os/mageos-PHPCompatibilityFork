@@ -27,7 +27,15 @@ use PHPCSUtils\Utils\Scopes;
 use PHPCSUtils\Utils\UseStatements;
 
 /**
- * Detects usage of dynamic properties in classes
+ * Reports usage of dynamic properties in classes as deprecated.
+ *
+ * As of PHP 8.2, The creation of dynamic properties is deprecated, unless the class opts in by using
+ * the #[\AllowDynamicProperties] attribute. stdClass allows dynamic properties.
+ * Usage of the __get()/__set() magic methods is not affected by this change.
+ *
+ * PHP version 8.2
+ *
+ * @link https://www.php.net/manual/en/migration82.deprecated.php#migration82.deprecated.core.dynamic-properties
  */
 class RemovedDynamicPropertiesSniff extends Sniff
 {
