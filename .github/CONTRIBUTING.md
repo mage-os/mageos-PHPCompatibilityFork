@@ -22,6 +22,8 @@ Contributions in the form of pull requests are very welcome.
 
 To start contributing, fork the repository, create a new branch in your fork, make your intended changes and pull the branch against the `develop` branch of this repository.
 
+Review the [Contributor License Agreement](https://opensource.adobe.com/cla.html) if this is your first time contributing.
+
 Please make sure that your pull request contains unit tests covering what's being addressed by it.
 
 * All code should be compatible with PHPCS >= 3.7.1.
