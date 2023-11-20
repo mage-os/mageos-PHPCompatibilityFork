@@ -39,7 +39,8 @@
     "yoast/phpunit-polyfills": "^1.0.5 || ^2.0.0"
   },
   "replace": {
-    "wimg/php-compatibility": "*"
+    "wimg/php-compatibility": "*",
+    "phpcompatibility/php-compatibility": "*"
   },
   "suggest": {
     "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
@@ -51,7 +52,6 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "9.x-dev",
       "dev-develop": "10.x-dev"
     }
   },
