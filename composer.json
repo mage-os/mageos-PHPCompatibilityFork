@@ -1,6 +1,6 @@
 {
-  "name": "phpcompatibility/php-compatibility",
-  "description": "A set of sniffs for PHP_CodeSniffer that checks for PHP cross-version compatibility.",
+  "name": "magento/php-compatibility-fork",
+  "description": "A set of sniffs for PHP_CodeSniffer that checks for PHP cross-version compatibility. This is a fork of phpcompatibility/php-compatibility",
   "license": "LGPL-3.0-or-later",
   "type": "phpcodesniffer-standard",
   "keywords": [ "compatibility", "phpcs", "standards", "static analysis" ],

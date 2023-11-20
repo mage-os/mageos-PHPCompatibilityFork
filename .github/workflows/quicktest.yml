@@ -1,10 +1,9 @@
 name: Quicktest
 
 on:
-  # Run on pushes, including merges, to all branches except `master` and `develop`.
+  # Run on pushes, including merges, to all branches except `develop`.
   push:
     branches-ignore:
-      - master
       - develop
     paths-ignore:
       - '**.md'
@@ -59,7 +58,7 @@ jobs:
           ini-values: ${{ steps.set_ini.outputs.PHP_INI }}
           coverage: none
 
-      - name: "Composer: set PHPCS version for tests (master)"
+      - name: "Composer: set PHPCS version for tests (dev-master)"
         if: ${{ matrix.phpcs_version != 'lowest' }}
         run: composer require squizlabs/php_codesniffer:"${{ matrix.phpcs_version }}" --no-update --no-scripts --no-interaction
 

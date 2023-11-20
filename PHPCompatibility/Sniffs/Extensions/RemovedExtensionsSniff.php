@@ -26,7 +26,7 @@ use PHPCSUtils\Utils\MessageHelper;
  * Suggests alternative extensions if available.
  *
  * As userland functions may be prefixed with a prefix also used by a native
- * PHP extension, the sniff offers the ability to whitelist specific functions
+ * PHP extension, the sniff offers the ability to allow specific functions
  * from being flagged by this sniff via a property in a custom ruleset
  * (since PHPCompatibility 7.0.2).
  *
@@ -44,7 +44,7 @@ class RemovedExtensionsSniff extends Sniff
     use ComplexVersionDeprecatedRemovedFeatureTrait;
 
     /**
-     * A list of functions to whitelist, if any.
+     * A list of functions to allow, if any.
      *
      * This is intended for projects using functions which start with the same
      * prefix as one of the removed extensions.
@@ -52,7 +52,7 @@ class RemovedExtensionsSniff extends Sniff
      * This property can be set from the ruleset, like so:
      * <rule ref="PHPCompatibility.Extensions.RemovedExtensions">
      *   <properties>
-     *     <property name="functionWhitelist" type="array" value="mysql_to_rfc3339,mysql_another_function" />
+     *     <property name="functionAllowlist" type="array" value="mysql_to_rfc3339,mysql_another_function" />
      *   </properties>
      * </rule>
      *
@@ -60,7 +60,7 @@ class RemovedExtensionsSniff extends Sniff
      *
      * @var string[]
      */
-    public $functionWhitelist;
+    public $functionAllowlist;
 
     /**
      * A list of removed extensions with their alternative, if any.
@@ -272,8 +272,8 @@ class RemovedExtensionsSniff extends Sniff
         $function   = $tokens[$stackPtr]['content'];
         $functionLc = \strtolower($function);
 
-        if ($this->isWhiteListed($functionLc) === true) {
-            // Function is whitelisted.
+        if ($this->isInAllowlist($functionLc) === true) {
+            // Function is in allowlist.
             return;
         }
 
@@ -290,7 +290,7 @@ class RemovedExtensionsSniff extends Sniff
 
 
     /**
-     * Is the current function being checked whitelisted ?
+     * Is the current function being checked in allowlist ?
      *
      * Parsing the list late as it may be provided as a property, but also inline.
      *
@@ -300,23 +300,23 @@ class RemovedExtensionsSniff extends Sniff
      *
      * @return bool
      */
-    protected function isWhiteListed($content)
+    protected function isInAllowlist($content)
     {
-        if (isset($this->functionWhitelist) === false) {
+        if (isset($this->functionAllowlist) === false) {
             return false;
         }
 
-        if (\is_string($this->functionWhitelist) === true) {
-            if (\strpos($this->functionWhitelist, ',') !== false) {
-                $this->functionWhitelist = \explode(',', $this->functionWhitelist);
+        if (\is_string($this->functionAllowlist) === true) {
+            if (\strpos($this->functionAllowlist, ',') !== false) {
+                $this->functionAllowlist = \explode(',', $this->functionAllowlist);
             } else {
-                $this->functionWhitelist = (array) $this->functionWhitelist;
+                $this->functionAllowlist = (array) $this->functionAllowlist;
             }
         }
 
-        if (\is_array($this->functionWhitelist) === true) {
-            $this->functionWhitelist = \array_map('strtolower', $this->functionWhitelist);
-            return \in_array($content, $this->functionWhitelist, true);
+        if (\is_array($this->functionAllowlist) === true) {
+            $this->functionAllowlist = \array_map('strtolower', $this->functionAllowlist);
+            return \in_array($content, $this->functionAllowlist, true);
         }
 
         return false;
