@@ -31,32 +31,14 @@ class Bar
     }
 }
 
-/**
- * @property bool $prop6 full format
- * @property $prop7 prop without type
- * @property bool prop8 prop with comment
- */
-class Foo1 extends Bar
+#[\AllowDynamicProperties]
+class Baz
 {
-    use TraitA, TraitB;
-    private bool $prop4;
-    public function __construct(
-        private bool $prop5
-    ) {
-    }
+    public bool $prop1;
 
-    private function reset(): void
+    public function resetProp1()
     {
-        $this->resetProp1();
         $this->prop1 = false;
-        $this->prop2 = false;
-        $this->prop3 = false;
-        $this->prop4 = false;
-        $this->prop5 = false;
-        $this->prop6 = false;
-        $this->prop7 = false;
-        $this->prop8 = false;
-        $this->prop9 = false;
     }
 }
 
@@ -65,9 +47,8 @@ class Foo1 extends Bar
  * @property $prop7 prop without type
  * @property bool prop8 prop with comment
  */
-class Foo2
+class Foo1
 {
-    use TraitA, TraitB;
     private bool $prop4;
     public function __construct(
         private bool $prop5
@@ -85,7 +66,49 @@ class Foo2
         $this->prop6 = false;
         $this->prop7 = false;
         $this->prop8 = false;
-        $this->prop9 = false;
+        $this/** a comment */ ->/** another comment*/ prop9 = false;
+        $this->setSomething($this->prop9);
+        $prop9 = $this->prop9;
+        $this::$prop9 = false;
+        $this->prop4->prop9 = false;
+        $thisVar = $this;
+        $thisVar->prop9 = false; // undetermined context
+        $thisVar->$this->prop9 = false; // false positive
+    }
+}
+
+class Foo2
+{
+    private bool $prop4;
+    public function __construct(
+        private bool $prop5
+    ) {
+    }
+
+    private function reset(): void
+    {
+        $this->resetProp1();
+        $this->prop1 = false;
+        $this->prop2 = false;
+        $this->prop3 = false;
+        $this->prop4 = false;
+        $this->prop5 = false;
+        $this->prop6 = false;
+        $this->prop7 = false;
+        $this->prop8 = false;
+        $this/** a comment */ ->/** another comment*/ prop9 = false;
+        $this->setSomething($this->prop9);
+        $prop9 = $this->prop9;
+        $this::$prop9 = false;
+        $this->prop4->prop9 = false;
+        $thisVar = $this;
+        $thisVar->prop9 = false; // undetermined context
+        $thisVar->$this->prop9 = false; // false positive
+    }
+
+    public function setSomething()
+    {
+
     }
 }
 
@@ -96,6 +119,7 @@ class Foo2
  */
 class Foo3 extends Bar
 {
+    use TraitA, TraitB;
     private bool $prop4;
     public function __construct(
         private bool $prop5
@@ -124,6 +148,7 @@ class Foo3 extends Bar
  */
 class Foo4
 {
+    use TraitA, TraitB;
     private bool $prop4;
     public function __construct(
         private bool $prop5
@@ -145,6 +170,40 @@ class Foo4
     }
 }
 
+/**
+ * @property bool $prop6 full format
+ * @property $prop7 prop without type
+ * @property bool prop8 prop with comment
+ */
+class Foo5 extends Bar
+{
+    private bool $prop4;
+    public function __construct(
+        private bool $prop5
+    ) {
+    }
+
+    private function reset(): void
+    {
+        $this->resetProp1();
+        $this->prop1 = false;
+        $this->prop2 = false;
+        $this->prop3 = false;
+        $this->prop4 = false;
+        $this->prop5 = false;
+        $this->prop6 = false;
+        $this->prop7 = false;
+        $this->prop8 = false;
+        $this->prop9 = false;
+    }
+}
+
+/**
+ * @property bool $prop6 full format
+ * @property $prop7 prop without type
+ * @property bool prop8 prop with comment
+ */
+#[\AllowDynamicProperties]
 class Foo5
 {
     private bool $prop4;
@@ -165,19 +224,39 @@ class Foo5
         $this->prop7 = false;
         $this->prop8 = false;
         $this->prop9 = false;
-        $this/** a comment */ ->/** another comment*/ prop9 = false;
-        $this->setSomething($this->prop9);
-        $prop9 = $this->prop9;
-        $this::$prop9 = false;
-        $this->prop4->prop9 = false;
-        $thisVar = $this;
-        $thisVar->prop9 = false; // undetermined context
-        $thisVar->$this->prop9 = false; // false positive
+    }
+}
+
+/**
+ * @property bool $prop6 full format
+ * @property $prop7 prop without type
+ * @property bool prop8 prop with comment
+ */
+class Foo5
+{
+    private bool $prop4;
+    public function __construct(
+        private bool $prop5
+    ) {
     }
 
-    public function setSomething()
+    private function reset(): void
     {
+        $this->resetProp1();
+        $this->prop1 = false;
+        $this->prop2 = false;
+        $this->prop3 = false;
+        $this->prop4 = false;
+        $this->prop5 = false;
+        $this->prop6 = false;
+        $this->prop7 = false;
+        $this->prop8 = false;
+        $this->prop9 = false;
+    }
 
+    public function __set($name, $value)
+    {
+        //do something
     }
 }
 

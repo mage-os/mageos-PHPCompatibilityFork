@@ -43,8 +43,7 @@ class RemovedDynamicPropertiesUnitTest extends BaseSniffTestCase
         $this->assertWarning(
             $file,
             $line,
-            'Access to an undefined property ' . $property . ';'
-            . ' Creation of dynamic property is deprecated since PHP 8.2'
+            'Creation of dynamic property ' . $property . ' is deprecated since PHP 8.2'
         );
     }
 
@@ -90,20 +89,20 @@ class RemovedDynamicPropertiesUnitTest extends BaseSniffTestCase
     public static function dataProvider()
     {
         return [
-            [136, 'Foo4::$prop1'],
-            [137, 'Foo4::$prop2'],
-            [138, 'Foo4::$prop3'],
-            [144, 'Foo4::$prop9'],
-            [159, 'Foo5::$prop1'],
-            [160, 'Foo5::$prop2'],
-            [161, 'Foo5::$prop3'],
-            [164, 'Foo5::$prop6'],
-            [165, 'Foo5::$prop7'],
-            [166, 'Foo5::$prop8'],
-            [167, 'Foo5::$prop9'],
-            [168, 'Foo5::$prop9'],
-            [169, 'Foo5::$prop9'],
-            [170, 'Foo5::$prop9'],
+            [61, 'Foo1::$prop1'],
+            [62, 'Foo1::$prop2'],
+            [63, 'Foo1::$prop3'],
+            [66, 'Foo1::$prop6'],
+            [67, 'Foo1::$prop7'],
+            [68, 'Foo1::$prop8'],
+            [69, 'Foo1::$prop9'],
+            [91, 'Foo2::$prop1'],
+            [92, 'Foo2::$prop2'],
+            [93, 'Foo2::$prop3'],
+            [96, 'Foo2::$prop6'],
+            [97, 'Foo2::$prop7'],
+            [98, 'Foo2::$prop8'],
+            [99, 'Foo2::$prop9'],
         ];
     }
 }

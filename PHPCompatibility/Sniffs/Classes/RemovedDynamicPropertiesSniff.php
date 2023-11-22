@@ -41,17 +41,6 @@ class RemovedDynamicPropertiesSniff extends Sniff
 {
 
     /**
-     * List of tags that declare a magic property.
-     *
-     * @var string[]
-     */
-    private $magicPropertyTags = [
-        '@property',
-        '@property-read',
-        '@property-write',
-    ];
-
-    /**
      * Registers the tokens that this sniff wants to listen for.
      *
      * @return array
@@ -59,8 +48,7 @@ class RemovedDynamicPropertiesSniff extends Sniff
     public function register()
     {
         return [
-            \T_OBJECT_OPERATOR,
-            \T_NULLSAFE_OBJECT_OPERATOR,
+            \T_OBJECT_OPERATOR
         ];
     }
 
@@ -87,19 +75,28 @@ class RemovedDynamicPropertiesSniff extends Sniff
             return;
         }
 
-        // Check if it is string.
+        // Disregard if class extends another class, uses traits, allows dynamic properties or has magic method __set().
+        if (ObjectDeclarations::findExtendedClassName($phpcsFile, $classPtr) !== false
+            || $this->isClassUsingTraits($phpcsFile, $classPtr)
+            || $this->hasClassAllowDynamicProperties($phpcsFile, $classPtr)
+            || $this->hasClassMagicSetter($phpcsFile, $classPtr)
+        ) {
+            return;
+        }
+
         $propertyNamePtr = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
+        // Disregard if property name is not a string.
         if ($propertyNamePtr === false || $tokens[$propertyNamePtr]['code'] !== \T_STRING) {
             return;
         }
 
         $afterPropertyNamePtr = $phpcsFile->findNext(Tokens::$emptyTokens, ($propertyNamePtr + 1), null, true);
-        // Check if it is not a method call.
-        if ($tokens[$afterPropertyNamePtr]['code'] === \T_OPEN_PARENTHESIS) {
+        // Disregard if is not assigned a value.
+        if ($tokens[$afterPropertyNamePtr]['code'] !== \T_EQUAL) {
             return;
         }
 
-        // Check if it is a property access on $this.
+        // Disregard if property is not accessed directly through $this.
         $thisPtr = $phpcsFile->findPrevious(Tokens::$emptyTokens, $stackPtr - 1, null, true);
         if ($thisPtr === false
             || $tokens[$thisPtr]['code'] !== \T_VARIABLE
@@ -108,7 +105,7 @@ class RemovedDynamicPropertiesSniff extends Sniff
             return;
         }
 
-        // Check if it is a direct property access.
+        // Disregard if $this is preceded with object operator or double colon.
         $beforeThisPtr = $phpcsFile->findPrevious(Tokens::$emptyTokens, $thisPtr - 1, null, true);
         if ($beforeThisPtr &&
             \in_array(
@@ -120,9 +117,9 @@ class RemovedDynamicPropertiesSniff extends Sniff
         }
 
         $propertyName = $tokens[$propertyNamePtr]['content'];
+        // Disregard if property is declared in the class.
         if (\in_array($propertyName, $this->getClassDeclaredProperties($phpcsFile, $classPtr), true)
             || \in_array($propertyName, $this->getClassPromotedProperties($phpcsFile, $classPtr), true)
-            || \in_array($propertyName, $this->getClassMagicProperties($phpcsFile, $classPtr), true)
         ) {
             return;
         }
@@ -133,14 +130,9 @@ class RemovedDynamicPropertiesSniff extends Sniff
             $className = $namespace . '\\' . $className;
         }
 
-        if (!$this->isClassUsingTraits($phpcsFile, $classPtr)
-            && ObjectDeclarations::findExtendedClassName($phpcsFile, $classPtr) === false
-        ) {
-            $error = 'Access to an undefined property %s::$%s;' .
-                ' Creation of dynamic property is deprecated since PHP 8.2';
-            $data  = [$className, $propertyName];
-            $phpcsFile->addWarning($error, $propertyNamePtr, 'Deprecated', $data);
-        }
+        $error = 'Creation of dynamic property %s::$%s is deprecated since PHP 8.2';
+        $data  = [$className, $propertyName];
+        $phpcsFile->addWarning($error, $propertyNamePtr, 'Deprecated', $data);
     }
 
     /**
@@ -201,40 +193,81 @@ class RemovedDynamicPropertiesSniff extends Sniff
     }
 
     /**
-     * Find magic properties declared in the class PHPDoc
+     * Check if class has AllowDynamicProperties attribute
      *
      * @param File $phpcsFile The file being scanned.
      * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
      *
-     * @return string[]
+     * @return bool
      */
-    public function getClassMagicProperties(File $phpcsFile, $stackPtr)
+    public function hasClassAllowDynamicProperties(File $phpcsFile, $stackPtr)
     {
         if (Cache::isCached($phpcsFile, __METHOD__, $stackPtr) === true) {
             return Cache::get($phpcsFile, __METHOD__, $stackPtr);
         }
-        $properties      = [];
-        $tokens          = $phpcsFile->getTokens();
-        $commentStartPtr = $this->findDocCommentOpenTag($phpcsFile, $stackPtr);
-        if ($commentStartPtr === -1) {
-            return [];
-        }
-        foreach ($tokens[$commentStartPtr]['comment_tags'] as $tag) {
-            $token = $tokens[$tag];
-            if (!\in_array($token['content'], $this->magicPropertyTags, true)
-                || $tokens[($tag + 2)]['code'] !== \T_DOC_COMMENT_STRING
+        $found    = false;
+        $tokens   = $phpcsFile->getTokens();
+        $previous = $stackPtr;
+        while ($previous = $phpcsFile->findPrevious(\T_ATTRIBUTE, $previous - 1)) {
+            if (isset($tokens[$previous]['attribute_opener']) === false
+                || isset($tokens[$previous]['attribute_closer']) === false
             ) {
                 continue;
             }
-            $commentParts = \preg_split('/\s+/', (string)$tokens[($tag + 2)]['content'], 3);
-            if (\strpos($commentParts[0], '$') === 0) {
-                $properties[] = \ltrim($commentParts[0], '$');
-            } elseif (isset($commentParts[1])) {
-                $properties[] = \ltrim($commentParts[1], '$');
+
+            // Disregard if the attribute does not target current class
+            $next = $phpcsFile->findNext(\T_CLASS, $tokens[$previous]['attribute_opener'] + 1);
+            if ($next !== $stackPtr) {
+                break;
+            }
+
+            $next = $tokens[$previous]['attribute_opener'];
+            while ($next = $phpcsFile->findNext(\T_STRING, $next + 1, $tokens[$previous]['attribute_closer'])) {
+                if ($tokens[$next]['content'] === 'AllowDynamicProperties') {
+                    $beforeAttrPtr = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($next - 1), null, true);
+                    if ($tokens[$beforeAttrPtr]['code'] !== \T_NS_SEPARATOR) {
+                        $found = true;
+                        break 2;
+                    }
+                    $beforeNSPtr = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($beforeAttrPtr - 1), null, true);
+                    if (!\in_array($tokens[$beforeNSPtr]['code'], [\T_STRING, \T_NAMESPACE], true)) {
+                        $found = true;
+                        break 2;
+                    }
+                }
             }
         }
-        Cache::set($phpcsFile, __METHOD__, $stackPtr, $properties);
-        return $properties;
+        Cache::set($phpcsFile, __METHOD__, $stackPtr, $found);
+        return $found;
+    }
+
+
+    /**
+     * Check if class has magic method __set()
+     *
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
+     *
+     * @return bool
+     */
+    private function hasClassMagicSetter(File $phpcsFile, $stackPtr)
+    {
+        if (Cache::isCached($phpcsFile, __METHOD__, $stackPtr) === true) {
+            return Cache::get($phpcsFile, __METHOD__, $stackPtr);
+        }
+        $found = false;
+        $next  = $stackPtr;
+        while ($next = $this->findInClass($phpcsFile, $stackPtr, $next + 1, \T_FUNCTION)) {
+            if (Scopes::isOOMethod($phpcsFile, $next)
+                && \strtolower(FunctionDeclarations::getName($phpcsFile, $next)) === '__set'
+            ) {
+                $found = true;
+                break;
+            }
+        }
+
+        Cache::set($phpcsFile, __METHOD__, $stackPtr, $found);
+        return $found;
     }
 
     /**
@@ -278,40 +311,5 @@ class RemovedDynamicPropertiesSniff extends Sniff
         $classScopeEnd   = $tokens[$classPtr]['scope_closer'];
         $classScopeStart = $tokens[$classPtr]['scope_opener'];
         return $phpcsFile->findNext($needle, \max($currentPtr, $classScopeStart), $classScopeEnd);
-    }
-
-    /**
-     * Finds matching PHPDoc for current pointer
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return int
-     */
-    private function findDocCommentOpenTag(File $phpcsFile, $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-
-        $commentStartPtr = $phpcsFile->findPrevious(
-            [
-                T_WHITESPACE,
-                T_DOC_COMMENT_STAR,
-                T_DOC_COMMENT_WHITESPACE,
-                T_DOC_COMMENT_TAG,
-                T_DOC_COMMENT_STRING,
-                T_DOC_COMMENT_CLOSE_TAG,
-            ],
-            $stackPtr - 1,
-            null,
-            true,
-            null,
-            true
-        );
-
-        if ($tokens[$commentStartPtr]['code'] !== T_DOC_COMMENT_OPEN_TAG) {
-            return -1;
-        }
-
-        return $commentStartPtr;
     }
 }
