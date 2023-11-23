@@ -7,7 +7,7 @@
  * PHPCompatibility, an external standard for PHP_CodeSniffer.
  *
  * @package   PHPCompatibility
- * @copyright 2012-2020 PHPCompatibility Contributors
+ * @copyright 2012-2023 PHPCompatibility Contributors
  * @license   https://opensource.org/licenses/LGPL-3.0 LGPL3
  * @link      https://github.com/PHPCompatibility/PHPCompatibility
  */
@@ -200,7 +200,7 @@ class RemovedDynamicPropertiesSniff extends Sniff
      *
      * @return bool
      */
-    public function hasClassAllowDynamicProperties(File $phpcsFile, $stackPtr)
+    private function hasClassAllowDynamicProperties(File $phpcsFile, $stackPtr)
     {
         if (Cache::isCached($phpcsFile, __METHOD__, $stackPtr) === true) {
             return Cache::get($phpcsFile, __METHOD__, $stackPtr);
