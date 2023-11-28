@@ -1,17 +1,24 @@
+> [!NOTE]  
+> This is a fork of [PHPCompatibility](https://github.com/PHPCompatibility/PHPCompatibility). It adds the following capabilities on top of the awesome ones already provided through **PHPCompatibility**:
+>
+> - Added sniff `PHPCompatibility.ParameterValues.RemovedMbStringEncodings` that reports usage of the QPrint, Base64, Uuencode, and HTML-ENTITIES 'text encodings' with MBString functions as deprecated. See [PHP 8.2 Deprecated Features](https://www.php.net/manual/en/migration82.deprecated.php#migration82.deprecated.mbstring).
+> - Added sniff `PHPCompatibility.Classes.RemovedDynamicProperties` that reports usage of dynamic properties in classes as deprecated. See [PHP 8.2 Deprecated Features](https://www.php.net/manual/en/migration82.deprecated.php#migration82.deprecated.core.dynamic-properties).
+> - Enhanced sniff `PHPCompatibility.FunctionDeclarations.ForbiddenFinalPrivateMethods` to be fixable.
+> - Replaced objectionable terms with more inclusive ones.
+
 PHP Compatibility Coding Standard for PHP CodeSniffer
 =====================================================
 [![Latest Stable Version](https://poser.pugx.org/phpcompatibility/php-compatibility/v/stable.png)](https://packagist.org/packages/phpcompatibility/php-compatibility)
 [![Latest Unstable Version](https://img.shields.io/badge/unstable-dev--develop-e68718.svg?maxAge=2419200)](https://packagist.org/packages/phpcompatibility/php-compatibility#dev-develop)
 ![Awesome](https://img.shields.io/badge/awesome%3F-yes!-brightgreen.svg)
-[![License](https://poser.pugx.org/phpcompatibility/php-compatibility/license.png)](https://github.com/PHPCompatibility/PHPCompatibility/blob/master/LICENSE)
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=wimg&url=https://github.com/PHPCompatibility/PHPCompatibility&title=PHPCompatibility&language=&tags=github&category=software)
+[![License](https://poser.pugx.org/phpcompatibility/php-compatibility/license.png)](https://github.com/magento/PHPCompatibilityFork/blob/develop/LICENSE)
 
-[![CS Build Status](https://github.com/PHPCompatibility/PHPCompatibility/workflows/CS/badge.svg?branch=develop)](https://github.com/PHPCompatibility/PHPCompatibility/actions?query=workflow%3ACS)
-[![Test Build Status](https://github.com/PHPCompatibility/PHPCompatibility/workflows/Test/badge.svg?branch=develop)](https://github.com/PHPCompatibility/PHPCompatibility/actions?query=workflow%3ATest)
+[![CS Build Status](https://github.com/magento/PHPCompatibilityFork/workflows/CS/badge.svg?branch=develop)](https://github.com/magento/PHPCompatibilityFork/actions?query=workflow%3ACS)
+[![Test Build Status](https://github.com/magento/PHPCompatibilityFork/workflows/Test/badge.svg?branch=develop)](https://github.com/magento/PHPCompatibilityFork/actions?query=workflow%3ATest)
 [![Coverage Status](https://coveralls.io/repos/github/PHPCompatibility/PHPCompatibility/badge.svg?branch=develop)](https://coveralls.io/github/PHPCompatibility/PHPCompatibility?branch=develop)
 
 [![Minimum PHP Version](https://img.shields.io/packagist/php-v/phpcompatibility/php-compatibility.svg?maxAge=3600)](https://packagist.org/packages/phpcompatibility/php-compatibility)
-[![Tested on PHP 5.4 to nightly](https://img.shields.io/badge/tested%20on-PHP%205.4%20|%205.5%20|%205.6%20|%207.0%20|%207.1%20|%207.2%20|%207.3%20|%207.4%20|%208.0%20|%20nightly%20-brightgreen.svg?maxAge=2419200)](https://github.com/PHPCompatibility/PHPCompatibility/actions?query=workflow%3ATest)
+[![Tested on PHP 5.4 to nightly](https://img.shields.io/badge/tested%20on-PHP%205.4%20|%205.5%20|%205.6%20|%207.0%20|%207.1%20|%207.2%20|%207.3%20|%207.4%20|%208.0%20|%20nightly%20-brightgreen.svg?maxAge=2419200)](https://github.com/magento/PHPCompatibilityFork/actions?query=workflow%3ATest)
 
 
 This is a set of sniffs for [PHP CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) that checks for PHP cross-version compatibility.
@@ -35,7 +42,7 @@ It will allow you to analyse your code for compatibility with higher and lower v
 PHP Version Support
 -------
 
-The project aims to cover all PHP compatibility changes introduced since PHP 5.0 up to the latest PHP release. This is an ongoing process and coverage is not yet 100% (if, indeed, it ever could be). Progress is tracked on [our GitHub issue tracker](https://github.com/PHPCompatibility/PHPCompatibility/issues).
+The project aims to cover all PHP compatibility changes introduced since PHP 5.0 up to the latest PHP release. This is an ongoing process and coverage is not yet 100% (if, indeed, it ever could be). Progress is tracked on [our GitHub issue tracker](https://github.com/magento/PHPCompatibilityFork/issues).
 
 Pull requests that check for compatibility issues in PHP 4 code - in particular between PHP 4 and PHP 5.0 - are very welcome as there are still situations where people need help upgrading legacy systems. However, coverage for changes introduced before PHP 5.1 will remain patchy as sniffs for this are not actively being developed at this time.
 
@@ -77,7 +84,7 @@ Installation in a Composer project (method 1)
 * Add the following lines to the `require-dev` section of your `composer.json` file.
     ```json
     "require-dev": {
-        "phpcompatibility/php-compatibility": "*"
+        "magento/php-compatibility-fork": "*"
     },
     "prefer-stable" : true
     ```
@@ -85,8 +92,8 @@ Installation in a Composer project (method 1)
     - If PHPCompatibility is the **_only_** external PHP CodeSniffer standard you use, you can add the following to your `composer.json` file to automatically run the necessary command:
         ```json
         "scripts": {
-            "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
-            "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
+            "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/magento/php-compatibility-fork",
+            "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/magento/php-compatibility-fork"
         }
         ```
     - Alternatively - and **_strongly recommended_** if you use more than one external PHP CodeSniffer standard - you can use any of the following Composer plugins to handle this for you.
@@ -98,7 +105,7 @@ Installation in a Composer project (method 1)
        * [SimplyAdmire/ComposerPlugins](https://github.com/SimplyAdmire/ComposerPlugins). This plugin *might* still work, but appears to be abandoned.
     - As a last alternative in case you use a custom ruleset, you can tell PHP CodeSniffer the path to the PHPCompatibility standard by adding the following snippet to your custom ruleset:
         ```xml
-        <config name="installed_paths" value="vendor/phpcompatibility/php-compatibility" />
+        <config name="installed_paths" value="vendor/magento/php-compatibility-fork" />
         ```
 * Run `composer update --lock` to install both PHP CodeSniffer, the PHPCompatibility coding standard and - optionally - the Composer plugin.
 * Verify that the PHPCompatibility standard is registered correctly by running `./vendor/bin/phpcs -i` on the command line. PHPCompatibility should be listed as one of the available standards.
@@ -115,7 +122,7 @@ Installation via a git check-out to an arbitrary directory (method 2)
     PHP CodeSniffer offers a variety of installation methods to suit your work-flow: Composer, [PEAR](http://pear.php.net/PHP_CodeSniffer), a Phar file, zipped/tarred release archives or checking the repository out using Git.
 
     **Pro-tip:** Register the path to PHPCS in your system `$PATH` environment variable to make the `phpcs` command available from anywhere in your file system.
-* Download the [latest PHPCompatibility release](https://github.com/PHPCompatibility/PHPCompatibility/releases) and unzip/untar it into an arbitrary directory.
+* Download the [latest PHPCompatibility release](https://github.com/magento/PHPCompatibilityFork/releases) and unzip/untar it into an arbitrary directory.
 
     You can also choose to clone the repository using git to easily update your install regularly.
 * Add the path to the directory in which you placed your copy of the PHPCompatibility repo to the PHP CodeSniffer configuration using the below command from the command line:
@@ -149,22 +156,6 @@ Sniffing your code for compatibility with specific PHP version(s)
     - As of PHPCompatibility 7.1.3, you can omit one part of the range if you want to support everything above or below a particular version, i.e. use `--runtime-set testVersion 7.0-` to run all the checks for PHP 7.0 and above.
 * By default the report will be sent to the console, if you want to save the report to a file, add the following to the command line command: `--report-full=path/to/report-file`.
     For more information and other reporting options, check the [PHP CodeSniffer wiki](https://github.com/squizlabs/PHP_CodeSniffer/wiki/Reporting).
-
-
-### Using a framework/CMS/polyfill specific ruleset
-
-As of mid 2018, a limited set of framework/CMS specific rulesets is available. These rulesets are hosted in their own repositories.
-* `PHPCompatibilityJoomla` [GitHub](https://github.com/PHPCompatibility/PHPCompatibilityJoomla) | [Packagist](https://packagist.org/packages/phpcompatibility/phpcompatibility-joomla)
-* `PHPCompatibilityWP` [GitHub](https://github.com/PHPCompatibility/PHPCompatibilityWP) | [Packagist](https://packagist.org/packages/phpcompatibility/phpcompatibility-wp)
-
-Since the autumn of 2018, there are also a number of PHP polyfill specific rulesets available:
-* `PHPCompatibilityPasswordCompat` [GitHub](https://github.com/PHPCompatibility/PHPCompatibilityPasswordCompat) | [Packagist](https://packagist.org/packages/phpcompatibility/phpcompatibility-passwordcompat): accounts for @ircmaxell's [`password_compat`](https://github.com/ircmaxell/password_compat) polyfill library.
-* `PHPCompatibilityParagonie` [GitHub](https://github.com/PHPCompatibility/PHPCompatibilityParagonie) | [Packagist](https://packagist.org/packages/phpcompatibility/phpcompatibility-paragonie): contains two rulesets which account for the Paragonie [`random_compat`](https://github.com/paragonie/random_compat) and [`sodium_compat`](https://github.com/paragonie/sodium_compat) polyfill libraries respectively.
-* `PHPCompatibilitySymfony` [GitHub](https://github.com/PHPCompatibility/PHPCompatibilitySymfony) | [Packagist](https://packagist.org/packages/phpcompatibility/phpcompatibility-symfony): contains a number of rulesets which account for various PHP polyfill libraries offered by the Symfony project. For more details about the available rulesets, please check out the [README of the PHPCompatibilitySymfony](https://github.com/PHPCompatibility/PHPCompatibilitySymfony/blob/master/README.md) repository.
-
-If you want to make sure you have all PHPCompatibility rulesets available at any time, you can use the `PHPCompatibilityAll` package [GitHub](https://github.com/PHPCompatibility/PHPCompatibilityAll) | [Packagist](https://packagist.org/packages/phpcompatibility/phpcompatibility-all).
-
-**IMPORTANT:** Framework/CMS/Polyfill specific rulesets do not set the minimum PHP version for your project, so you will still need to pass a `testVersion` to get the most accurate results.
 
 
 Using a custom ruleset
@@ -208,12 +199,12 @@ At this moment, there are two sniffs which have a property which can be set via 
 The `PHPCompatibility.Extensions.RemovedExtensions` sniff checks for removed extensions based on the function prefix used for these extensions.
 This might clash with userland functions using the same function prefix.
 
-To whitelist userland functions, you can pass a comma-delimited list of function names to the sniff.
+To allow userland functions, you can pass a comma-delimited list of function names to the sniff.
 ```xml
-    <!-- Whitelist the mysql_to_rfc3339() and mysql_another_function() functions. -->
+    <!-- Allow the mysql_to_rfc3339() and mysql_another_function() functions. -->
     <rule ref="PHPCompatibility.Extensions.RemovedExtensions">
         <properties>
-            <property name="functionWhitelist" type="array" value="mysql_to_rfc3339,mysql_another_function"/>
+            <property name="functionAllowlist" type="array" value="mysql_to_rfc3339,mysql_another_function"/>
         </properties>
     </rule>
 ```

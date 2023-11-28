@@ -1,6 +1,6 @@
 {
-  "name": "phpcompatibility/php-compatibility",
-  "description": "A set of sniffs for PHP_CodeSniffer that checks for PHP cross-version compatibility.",
+  "name": "magento/php-compatibility-fork",
+  "description": "A set of sniffs for PHP_CodeSniffer that checks for PHP cross-version compatibility. This is a fork of phpcompatibility/php-compatibility",
   "license": "LGPL-3.0-or-later",
   "type": "phpcodesniffer-standard",
   "keywords": [ "compatibility", "phpcs", "standards", "static analysis" ],
@@ -39,7 +39,8 @@
     "yoast/phpunit-polyfills": "^1.0.5 || ^2.0.0"
   },
   "replace": {
-    "wimg/php-compatibility": "*"
+    "wimg/php-compatibility": "*",
+    "phpcompatibility/php-compatibility": "*"
   },
   "suggest": {
     "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
@@ -51,7 +52,6 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "9.x-dev",
       "dev-develop": "10.x-dev"
     }
   },

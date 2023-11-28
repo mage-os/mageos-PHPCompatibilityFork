@@ -22,6 +22,8 @@ Contributions in the form of pull requests are very welcome.
 
 To start contributing, fork the repository, create a new branch in your fork, make your intended changes and pull the branch against the `develop` branch of this repository.
 
+Review the [Contributor License Agreement](https://opensource.adobe.com/cla.html) if this is your first time contributing.
+
 Please make sure that your pull request contains unit tests covering what's being addressed by it.
 
 * All code should be compatible with PHPCS >= 3.7.1.
@@ -39,29 +41,6 @@ Please make sure that your pull request contains unit tests covering what's bein
 * The legacy [PHP 5 manual](https://php-legacy-docs.zend.com/manual/php5/en/index)
 * The legacy [PHP 4 manual](https://php-legacy-docs.zend.com/manual/php4/en/index)
 * The [PHP source code](https://github.com/php/php-src) in general
-
-### Framework/CMS specific rulesets
-
-Since mid 2018, framework/CMS/polyfill specific rulesets will be accepted to be hosted in separate repositories in the PHPCompatibility organisation. If you are interested in adding a ruleset for a framework/CMS/PHP polyfill library, you can request a repository for it by [opening an issue](https://github.com/PHPCompatibility/PHPCompatibility/issues/new) in this repo.
-
-#### Guidelines for framework/CMS specific rulesets
-
-A framework/CMS/polyfill specific ruleset will generally contain `<exclude ...>` directives for backfills/polyfills provided by the framework/CMS/polyfill to prevent false positives.
-
-> A backfill is a function/constant/class (etc) which has been added to PHP in a later version than the minimum supported version of the framework/CMS and for which a function/constant/class of the same name is included in the framework/CMS when a PHP version is detected in which the function/constant/class did not yet exist.
-
-These rulesets will not be actively maintained by the maintainers of PHPCompatibility.
-
-The communities behind these PHP frameworks/CMSes/polyfill libraries are strongly encouraged to maintain these rulesets and pull requests with updates will be accepted gladly.
-
-**Note:**
-* It is recommended to include a link to the framework/CMS/polyfill source file where the backfill is declared when sending in a pull request adding a new backfill for one of these rulesets.
-* If the backfills provided by different major versions of frameworks/CMSes/polyfill libraries are signficantly different, separate rulesets for the relevant major versions of frameworks/CMSes/polyfill libraries will be accepted.
-* Framework/CMS specific ruleset should **_not_** contain a `<config name="testVersion" value="..."/>` directive.
-
-    While a framework/CMS/polyfill may have a certain minimum PHP version, projects based on or using the framework/CMS/polyfill might have a different (higher) minimum PHP version.
-    As support for overruling a `<config>` directive [is patchy](https://github.com/squizlabs/PHP_CodeSniffer/issues/1821), it should be recommended to set the desired `testVersion` either from the command line or in a project-specific custom ruleset.
-
 
 Naming conventions and repository structure
 -----------------------
@@ -93,7 +72,7 @@ All the sniffs are fully tested with PHPUnit tests and have `@group` annotations
 
 In order to run the tests on the sniffs, the following installation steps are required.
 
-1. Install PHP CodeSniffer and PHP Compatibility by following the instructions in the Readme for either [installing with Composer](https://github.com/PHPCompatibility/PHPCompatibility/blob/master/README.md#installation-in-a-composer-project-method-1) or via a [Git Checkout to an arbitrary directory](https://github.com/PHPCompatibility/PHPCompatibility/blob/master/README.md#installation-via-a-git-check-out-to-an-arbitrary-directory-method-2).
+1. Install PHP CodeSniffer and PHP Compatibility by following the instructions in the Readme for either [installing with Composer](https://github.com/magento/PHPCompatibilityFork/blob/develop/README.md#installation-in-a-composer-project-method-1) or via a [Git Checkout to an arbitrary directory](https://github.com/magento/PHPCompatibilityFork/blob/develop/README.md#installation-via-a-git-check-out-to-an-arbitrary-directory-method-2).
 
     If you install using Composer, make sure you run `composer install --prefer-source` to get access to the unit tests and other development related files.
 
