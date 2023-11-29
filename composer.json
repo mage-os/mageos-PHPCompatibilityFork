@@ -50,11 +50,6 @@
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
   },
-  "extra": {
-    "branch-alias": {
-      "dev-develop": "10.x-dev"
-    }
-  },
   "scripts": {
     "test": [
       "@php ./vendor/phpunit/phpunit/phpunit --no-coverage"
