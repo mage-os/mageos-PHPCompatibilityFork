@@ -1,9 +1,14 @@
 {
-  "name": "magento/php-compatibility-fork",
+  "name": "mage-os/php-compatibility-fork",
   "description": "A set of sniffs for PHP_CodeSniffer that checks for PHP cross-version compatibility. This is a fork of phpcompatibility/php-compatibility",
   "license": "LGPL-3.0-or-later",
   "type": "phpcodesniffer-standard",
-  "keywords": [ "compatibility", "phpcs", "standards", "static analysis" ],
+  "keywords": [
+    "compatibility",
+    "phpcs",
+    "standards",
+    "static analysis"
+  ],
   "authors": [
     {
       "name": "Wim Godden",
@@ -39,8 +44,7 @@
     "yoast/phpunit-polyfills": "^1.0.5 || ^2.0.0"
   },
   "replace": {
-    "wimg/php-compatibility": "*",
-    "phpcompatibility/php-compatibility": "*"
+    "magento/php-compatibility-fork": "v0.1.0"
   },
   "suggest": {
     "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
@@ -84,5 +88,6 @@
     "fixcs": [
       "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
     ]
-  }
+  },
+  "version": "1.1.0"
 }
